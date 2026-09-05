@@ -1,0 +1,12 @@
+# Configuration de déploiement Netlify — Run Club Léman 74
+# Site 100% statique (HTML/CSS, pas de build), servi tel quel depuis la racine du dépôt.
+
+[build]
+  publish = "."
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
