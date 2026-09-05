@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adhésion — Run Club Léman 74</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .form-card {
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(20,30,50,0.08);
+    overflow: hidden;
+  }
+  fieldset {
+    border: 0;
+    padding: 24px 28px;
+    margin: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  fieldset:last-of-type { border-bottom: none; }
+  legend {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--navy);
+    text-transform: uppercase;
+    padding: 0 0 12px;
+    width: 100%;
+  }
+  .intro-text { padding: 20px 28px 4px; color: var(--muted); font-size: 0.92rem; }
+  .field-note { font-size: 0.84rem; color: var(--muted); margin: -6px 0 14px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 560px) { .row { grid-template-columns: 1fr; } }
+  label.field-label { display: block; font-size: 0.88rem; font-weight: 600; margin: 14px 0 6px; color: var(--ink); }
+  label.field-label .req { color: var(--red); }
+  input[type="text"], input[type="tel"], input[type="email"], input[type="date"] {
+    width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 0.95rem; font-family: inherit; background: #fff; color: var(--ink);
+  }
+  input:focus, select:focus { outline: 2px solid var(--navy); outline-offset: 1px; }
+  .choice-group { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 6px 0 4px; }
+  .choice { display: flex; align-items: center; gap: 8px; font-size: 0.93rem; }
+  .choice input { width: 16px; height: 16px; flex: none; }
+  .cotis-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0; }
+  @media (max-width: 560px) { .cotis-options { grid-template-columns: 1fr; } }
+  .cotis-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; background: var(--cream); }
+  .cotis-card label { font-weight: 600; font-size: 0.93rem; }
+  .checkbox-line { display: flex; align-items: flex-start; gap: 10px; margin: 10px 0; font-size: 0.92rem; }
+  .checkbox-line input { margin-top: 3px; width: 16px; height: 16px; flex: none; }
+  .fine-print { font-size: 0.82rem; color: var(--muted); font-style: italic; margin-top: 10px; }
+  .legal-block { font-size: 0.9rem; color: var(--ink); margin-bottom: 10px; }
+  .submit-zone { padding: 26px 28px 30px; text-align: center; background: var(--cream); }
+  .submit-note { margin-top: 14px; font-size: 0.82rem; color: var(--muted); max-width: 480px; margin: 14px auto 0; }
+  select { padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; font-family: inherit; background: #fff; color: var(--ink); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="Logo Run Club Léman 74">
+      <span class="brand-text">RUN CLUB LÉMAN 74<span>Entre lac et montagne</span></span>
+    </a>
+    <nav class="main-nav">
+      <a href="index.html">Accueil</a>
+      <a href="le-club.html">Le club</a>
+      <a href="sorties.html">Sorties &amp; événements</a>
+      <a href="adhesion.html" class="active">Adhésion</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>Formulaire d'adhésion</h1>
+  <p>Saison 2026 / 2027</p>
+</div>
+
+<main>
+
+  <!--
+    Formulaire statique : l'envoi se fait via un lien "mailto" qui ouvre
+    le logiciel de messagerie du visiteur avec les réponses pré-remplies,
+    à destination de rcleman.74@gmail.com. Aucune donnée n'est envoyée à un serveur.
+  -->
+  <form class="form-card" action="mailto:rcleman.74@gmail.com?subject=Adh%C3%A9sion%20Run%20Club%20L%C3%A9man%2074%20-%20saison%202026-2027" method="post" enctype="text/plain">
+
+    <p class="intro-text">Merci de compléter ce formulaire pour adhérer au Run Club Léman 74. En cliquant sur « Envoyer », votre messagerie s'ouvrira avec vos réponses déjà rédigées : il ne restera qu'à cliquer sur envoyer.</p>
+
+    <fieldset>
+      <legend>1. Adhérent</legend>
+      <div class="row">
+        <div>
+          <label class="field-label">Nom <span class="req">*</span></label>
+          <input type="text" name="Nom" required>
+        </div>
+        <div>
+          <label class="field-label">Prénom <span class="req">*</span></label>
+          <input type="text" name="Prenom" required>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label class="field-label">Date de naissance <span class="req">*</span></label>
+          <input type="date" name="Date_de_naissance" required>
+        </div>
+        <div>
+          <label class="field-label">Téléphone <span class="req">*</span></label>
+          <input type="tel" name="Telephone" required>
+        </div>
+      </div>
+      <label class="field-label">E-mail <span class="req">*</span></label>
+      <input type="email" name="Email" required>
+    </fieldset>
+
+    <fieldset>
+      <legend>2. Contact en cas d'urgence</legend>
+      <p class="field-note">Ces coordonnées sont utilisées uniquement si une situation nécessite de contacter rapidement un proche.</p>
+      <div class="row">
+        <div>
+          <label class="field-label">Nom et prénom <span class="req">*</span></label>
+          <input type="text" name="Contact_urgence_nom" required>
+        </div>
+        <div>
+          <label class="field-label">Téléphone <span class="req">*</span></label>
+          <input type="tel" name="Contact_urgence_telephone" required>
+        </div>
+      </div>
+      <div class="checkbox-line">
+        <input type="checkbox" id="c_urgence_info" name="Confirmation_information_contact_urgence" value="Oui" required>
+        <label for="c_urgence_info">Je confirme avoir informé cette personne que ses coordonnées sont communiquées à l'association comme contact d'urgence.</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>3. Cotisation</legend>
+      <div class="cotis-options">
+        <div class="cotis-card">
+          <input type="radio" id="cotis_20" name="Formule_cotisation" value="Cotisation annuelle : 20 €" required>
+          <label for="cotis_20">Cotisation annuelle : 20 €</label>
+        </div>
+        <div class="cotis-card">
+          <input type="radio" id="cotis_60" name="Formule_cotisation" value="Formule cotisation + maillot : 60 €" required>
+          <label for="cotis_60">Formule cotisation + maillot : 60 €</label>
+        </div>
+      </div>
+
+      <label class="field-label">Mode de règlement <span class="req">*</span></label>
+      <div class="choice-group">
+        <span class="choice"><input type="radio" id="reg_especes" name="Mode_reglement" value="Espèces" required><label for="reg_especes">Espèces</label></span>
+        <span class="choice"><input type="radio" id="reg_cheque" name="Mode_reglement" value="Chèque" required><label for="reg_cheque">Chèque</label></span>
+        <span class="choice"><input type="radio" id="reg_virement" name="Mode_reglement" value="Virement" required><label for="reg_virement">Virement</label></span>
+      </div>
+
+      <label class="field-label" for="taille_maillot">Taille du maillot (si formule à 60 €)</label>
+      <select id="taille_maillot" name="Taille_maillot">
+        <option value="">Sans objet</option>
+        <option value="XS">XS</option>
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+        <option value="XXL">XXL</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend>4. Pratique de l'activité</legend>
+      <div class="checkbox-line">
+        <input type="checkbox" id="p1" name="Engagement_reglement_interieur" value="Oui" required>
+        <label for="p1">Je participe aux activités dans le respect du règlement intérieur et des consignes données par les organisateurs.</label>
+      </div>
+      <div class="checkbox-line">
+        <input type="checkbox" id="p2" name="Engagement_adaptation" value="Oui" required>
+        <label for="p2">J'adapte ma pratique à mes capacités physiques, à mon niveau et aux conditions rencontrées lors des sorties.</label>
+      </div>
+      <div class="checkbox-line">
+        <input type="checkbox" id="p3" name="Engagement_information_difficulte" value="Oui" required>
+        <label for="p3">J'informe l'organisateur si une difficulté particulière est susceptible d'affecter ma participation à une activité.</label>
+      </div>
+      <div class="checkbox-line">
+        <input type="checkbox" id="p4" name="Engagement_conscience_risques" value="Oui" required>
+        <label for="p4">Je suis conscient(e) que la course à pied, le trail et les activités en extérieur comportent des risques inhérents à leur pratique, notamment liés au terrain, aux conditions météorologiques et à l'effort physique.</label>
+      </div>
+      <div class="checkbox-line">
+        <input type="checkbox" id="p5" name="Engagement_code_route" value="Oui" required>
+        <label for="p5">Je m'engage à respecter le Code de la route et les règles applicables lorsque les sorties empruntent la voie publique.</label>
+      </div>
+      <p class="fine-print">Ces dispositions ne constituent pas une renonciation aux droits de l'adhérent et n'exonèrent pas l'association des responsabilités qui lui incombent légalement.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>5. Droit à l'image</legend>
+      <p class="legal-block">Des photographies ou vidéos peuvent être réalisées pendant les activités. J'autorise gratuitement l'association à utiliser les images sur lesquelles je suis identifiable pour présenter et promouvoir ses activités sur son site internet, ses réseaux sociaux et ses supports de communication.</p>
+      <div class="choice-group">
+        <span class="choice"><input type="radio" id="img_oui" name="Droit_image" value="OUI" required><label for="img_oui">OUI, j'autorise l'utilisation de mon image</label></span>
+        <span class="choice"><input type="radio" id="img_non" name="Droit_image" value="NON" required><label for="img_non">NON, je n'autorise pas l'utilisation de mon image</label></span>
+      </div>
+      <p class="fine-print">Le refus n'a aucune incidence sur l'adhésion. L'autorisation peut être retirée pour les utilisations futures en contactant l'association.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>6. Protection des données personnelles</legend>
+      <p class="legal-block">Les informations recueillies sont utilisées par Run Club Léman 74 pour gérer les adhésions, communiquer avec les adhérents, organiser les activités et, si nécessaire, contacter la personne désignée en cas d'urgence. Seules les personnes habilitées au sein de l'association peuvent y accéder. Les données sont conservées pendant la durée nécessaire à la gestion de l'adhésion, sous réserve des obligations légales applicables. Conformément au RGPD et à la loi Informatique et Libertés, vous disposez notamment de droits d'accès, de rectification, d'effacement, de limitation et, selon les traitements concernés, d'opposition.</p>
+      <p class="legal-block">E-mail de l'association : rcleman.74@gmail.com</p>
+      <p class="fine-print">Vous pouvez également introduire une réclamation auprès de la CNIL.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>7. Acceptation et signature</legend>
+      <div class="checkbox-line">
+        <input type="checkbox" id="a1" name="Engagement_reglement_interieur_lu" value="Oui" required>
+        <label for="a1">Je reconnais avoir pris connaissance du règlement intérieur du Run Club Léman 74 et m'engage à le respecter.</label>
+      </div>
+      <div class="checkbox-line">
+        <input type="checkbox" id="a2" name="Certification_exactitude" value="Oui" required>
+        <label for="a2">Je certifie que les informations communiquées dans ce formulaire sont exactes.</label>
+      </div>
+      <div class="row">
+        <div>
+          <label class="field-label">Fait à <span class="req">*</span></label>
+          <input type="text" name="Fait_a" required>
+        </div>
+        <div>
+          <label class="field-label">Le <span class="req">*</span></label>
+          <input type="date" name="Date_signature" required>
+        </div>
+      </div>
+      <label class="field-label">Nom et prénom <span class="req">*</span></label>
+      <input type="text" name="Nom_prenom_signature" required>
+      <div class="checkbox-line">
+        <input type="checkbox" id="a3" name="Signature_electronique" value="Lu et approuvé" required>
+        <label for="a3">« Lu et approuvé » — je valide ce formulaire comme signature électronique.</label>
+      </div>
+    </fieldset>
+
+    <div class="submit-zone">
+      <button type="submit" class="cta-btn">Envoyer mon adhésion</button>
+      <p class="submit-note">Ce bouton ouvre votre logiciel de messagerie habituel avec vos réponses pré-remplies, à destination de rcleman.74@gmail.com. Si rien ne s'ouvre, vérifiez qu'un client de messagerie est configuré sur votre appareil, ou envoyez vos informations directement à cette adresse.</p>
+    </div>
+
+  </form>
+
+</main>
+
+<footer class="site-footer">
+  <img class="foot-logo" src="assets/logo.png" alt="">
+  <div><strong>Run Club Léman 74</strong> — association loi 1901</div>
+  <div>Publier, Haute-Savoie · <a href="mailto:rcleman.74@gmail.com">rcleman.74@gmail.com</a></div>
+</footer>
+
+</body>
+</html>
