@@ -305,3 +305,37 @@ footer.site-footer .foot-logo {
   border-radius: 50%;
   margin-bottom: 10px;
 }
+
+.social-row {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin: 16px 0 4px;
+}
+
+.social-row a {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.social-row a svg {
+  width: 18px;
+  height: 18px;
+  fill: #dfe6ec;
+  transition: fill 0.18s ease;
+}
+
+.social-row a:hover {
+  background: var(--red);
+  border-color: var(--red);
+  transform: translateY(-2px);
+}
+
+.social-row a:hover svg { fill: #fff; }
