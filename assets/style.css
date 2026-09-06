@@ -370,3 +370,5 @@ footer.site-footer .foot-logo {
 .event-card p { margin: 0 0 8px; color: var(--muted); font-size: 0.93rem; }
 .event-card p:last-child { margin-bottom: 0; }
 .event-card .members-note { color: var(--red); font-weight: 700; }
+
+.cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
