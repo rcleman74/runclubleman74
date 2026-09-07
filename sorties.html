@@ -200,7 +200,13 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
-        .then(function (r) { return r.json().then(function (body) { return { ok: r.ok, body: body }; }); })
+        .then(function (r) {
+          return r.text().then(function (text) {
+            var parsed = null;
+            try { parsed = JSON.parse(text); } catch (e) { /* pas du JSON */ }
+            return { ok: r.ok, status: r.status, body: parsed, raw: text };
+          });
+        })
         .then(function (res) {
           if (res.ok) {
             statusEl.textContent = 'Sortie publiée !';
@@ -208,12 +214,13 @@
             form.reset();
             loadSorties();
           } else {
-            statusEl.textContent = (res.body && res.body.error) ? res.body.error : 'Une erreur est survenue.';
+            var msg = (res.body && res.body.error) ? res.body.error : ('Erreur ' + res.status + ' : ' + (res.raw || '').slice(0, 200));
+            statusEl.textContent = msg;
             statusEl.style.color = 'var(--red)';
           }
         })
-        .catch(function () {
-          statusEl.textContent = 'Impossible de contacter le serveur pour le moment.';
+        .catch(function (err) {
+          statusEl.textContent = 'Impossible de contacter le serveur : ' + (err && err.message ? err.message : err);
           statusEl.style.color = 'var(--red)';
         });
     });

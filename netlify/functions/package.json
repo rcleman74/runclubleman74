@@ -2,6 +2,6 @@
   "name": "runclubleman74-functions",
   "private": true,
   "dependencies": {
-    "@netlify/blobs": "latest"
+    "@netlify/blobs": "8.1.0"
   }
 }
