@@ -54,10 +54,61 @@
       </div>
     </div>
 
-    <div class="placeholder-box" style="margin-top:20px;">
-      <h3>À compléter par le comité</h3>
-      <p>Exemple de structure pour chaque sortie régulière : jour &amp; heure de départ, lieu de rendez-vous, niveau/distance, contact de l'organisateur.</p>
+    <div id="sorties-dynamiques" class="event-list" style="margin-top:20px;"></div>
+    <div id="sorties-vide" class="placeholder-box" style="margin-top:20px;">
+      <h3>Aucune sortie régulière programmée pour l'instant</h3>
+      <p>Le comité peut en ajouter une avec le formulaire ci-dessous.</p>
     </div>
+  </section>
+
+  <section class="block">
+    <span class="tag">Comité</span>
+    <h2>Proposer une sortie</h2>
+    <p>Ce formulaire publie la sortie directement sur cette page. Il sert surtout pour les grandes sorties (par exemple le dimanche) — pour les sorties de la semaine, le comité continue d'utiliser Messenger, WhatsApp et le groupe Facebook.</p>
+
+    <form class="form-card" id="sortieForm">
+      <div class="form-body">
+        <label class="field-label">Code d'accès du comité <span class="req">*</span></label>
+        <input type="password" name="code" required>
+
+        <div class="row">
+          <div>
+            <label class="field-label">Jour <span class="req">*</span></label>
+            <input type="date" name="Jour" required>
+          </div>
+          <div>
+            <label class="field-label">Heure de départ <span class="req">*</span></label>
+            <input type="text" name="Heure_de_depart" placeholder="ex : 9h00" required>
+          </div>
+        </div>
+
+        <label class="field-label">Lieu de rendez-vous <span class="req">*</span></label>
+        <input type="text" name="Lieu_de_rendez-vous" required>
+
+        <label class="field-label">Type de sortie <span class="req">*</span></label>
+        <div class="choice-group">
+          <span class="choice"><input type="radio" id="type_trail" name="Type_de_sortie" value="Trail" required><label for="type_trail">Trail</label></span>
+          <span class="choice"><input type="radio" id="type_run" name="Type_de_sortie" value="Run" required><label for="type_run">Run</label></span>
+          <span class="choice"><input type="radio" id="type_renfo" name="Type_de_sortie" value="Renforcement musculaire" required><label for="type_renfo">Renforcement musculaire</label></span>
+        </div>
+
+        <label class="field-label" for="niveau">Niveau</label>
+        <select id="niveau" name="Niveau">
+          <option value="Tous niveaux">Tous niveaux</option>
+          <option value="Débutant">Débutant</option>
+          <option value="Intermédiaire">Intermédiaire</option>
+          <option value="Confirmé">Confirmé</option>
+        </select>
+
+        <label class="field-label">Organisateur</label>
+        <input type="text" name="Organisateur" placeholder="Qui encadre la sortie">
+      </div>
+
+      <div class="submit-zone">
+        <button type="submit" class="cta-btn">Publier la sortie</button>
+        <p id="sortieStatus" style="min-height:1.2em; margin-top:10px; font-size:0.9rem;"></p>
+      </div>
+    </form>
   </section>
 
   <section class="block tinted">
@@ -78,6 +129,99 @@
     <a href="https://www.strava.com/clubs/1944340" target="_blank" rel="noopener" aria-label="Strava"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg></a>
   </div>
 </footer>
+
+<script>
+(function () {
+  var API = '/.netlify/functions/sorties';
+  var list = document.getElementById('sorties-dynamiques');
+  var empty = document.getElementById('sorties-vide');
+  var form = document.getElementById('sortieForm');
+  var statusEl = document.getElementById('sortieStatus');
+
+  function renderSorties(items) {
+    list.innerHTML = '';
+    if (!items || items.length === 0) {
+      empty.style.display = '';
+      return;
+    }
+    empty.style.display = 'none';
+    items
+      .slice()
+      .sort(function (a, b) { return (a.jour || '').localeCompare(b.jour || ''); })
+      .forEach(function (s) {
+        var card = document.createElement('div');
+        card.className = 'event-card';
+
+        var dateBadge = document.createElement('div');
+        dateBadge.className = 'event-date';
+        var d = s.jour ? new Date(s.jour + 'T00:00:00') : null;
+        dateBadge.textContent = (d && !isNaN(d)) ? d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }) : '?';
+
+        var body = document.createElement('div');
+        var h3 = document.createElement('h3');
+        h3.textContent = s.type + ' — ' + s.heure + ' à ' + s.lieu;
+        var p = document.createElement('p');
+        var bits = ['Niveau : ' + (s.niveau || 'Tous niveaux')];
+        if (s.organisateur) bits.push('Organisateur : ' + s.organisateur);
+        p.textContent = bits.join(' · ');
+
+        body.appendChild(h3);
+        body.appendChild(p);
+        card.appendChild(dateBadge);
+        card.appendChild(body);
+        list.appendChild(card);
+      });
+  }
+
+  function loadSorties() {
+    fetch(API)
+      .then(function (r) { return r.json(); })
+      .then(renderSorties)
+      .catch(function () { /* la sortie Backyard reste visible même si le chargement échoue */ });
+  }
+
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var data = new FormData(form);
+      var payload = {
+        code: data.get('code'),
+        jour: data.get('Jour'),
+        heure: data.get('Heure_de_depart'),
+        lieu: data.get('Lieu_de_rendez-vous'),
+        type: data.get('Type_de_sortie'),
+        niveau: data.get('Niveau'),
+        organisateur: data.get('Organisateur')
+      };
+      statusEl.textContent = 'Envoi en cours...';
+      statusEl.style.color = 'var(--muted)';
+      fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(function (r) { return r.json().then(function (body) { return { ok: r.ok, body: body }; }); })
+        .then(function (res) {
+          if (res.ok) {
+            statusEl.textContent = 'Sortie publiée !';
+            statusEl.style.color = 'var(--navy)';
+            form.reset();
+            loadSorties();
+          } else {
+            statusEl.textContent = (res.body && res.body.error) ? res.body.error : 'Une erreur est survenue.';
+            statusEl.style.color = 'var(--red)';
+          }
+        })
+        .catch(function () {
+          statusEl.textContent = 'Impossible de contacter le serveur pour le moment.';
+          statusEl.style.color = 'var(--red)';
+        });
+    });
+  }
+
+  loadSorties();
+})();
+</script>
 
 </body>
 </html>
