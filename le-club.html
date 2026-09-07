@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="assets/logo.png">
 <title>Le club — Run Club Léman 74</title>
 <meta name="description" content="Notre projet associatif, le bureau du comité et comment rejoindre le Run Club Léman 74.">
 <meta property="og:type" content="website">
@@ -14,6 +13,14 @@
 <meta property="og:url" content="https://runclubleman74.netlify.app/le-club.html">
 <meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="assets/style.css">
+<style>
+.photo-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:10px; }
+.photo-grid img { width:100%; height:220px; object-fit:cover; border-radius:12px; box-shadow:0 1px 3px rgba(20,30,50,0.12); display:block; }
+.photo-grid.two { grid-template-columns:repeat(2,1fr); }
+.photo-grid.two img { height:280px; }
+@media (max-width:780px){ .photo-grid { grid-template-columns:repeat(2,1fr); } .photo-grid.two { grid-template-columns:1fr; } }
+@media (max-width:480px){ .photo-grid { grid-template-columns:1fr; } }
+</style>
 </head>
 <body>
 
@@ -40,13 +47,39 @@
 
 <main>
   <section class="block">
-    <span class="tag">Notre objectif</span>
+    <span class="tag">Notre objet</span>
     <h2>Promouvoir la course à pied sur le territoire du Léman</h2>
     <p>Run Club Léman 74 est une association loi 1901 dont l'objet est de promouvoir la course à pied, d'organiser des sorties running collectives ainsi que des événements sportifs et conviviaux (apéros, barbecues...) sur le territoire du Léman, en Haute-Savoie.</p>
     <p>L'association a été créée lors de son assemblée générale constitutive le 29 mai 2026, à Publier, et déclarée à la Préfecture de la Haute-Savoie.</p>
   </section>
 
+<section class="block">
+    <span class="tag">En images</span>
+    <h2>Nos sorties</h2>
+    <p>Quelques instants pris sur le vif, entre deux foulées.</p>
+    <div class="photo-grid">
+      <img src="assets/gallery/sortie-01.jpg" alt="Sortie du Run Club Léman 74">
+      <img src="assets/gallery/sortie-02.jpg" alt="Sortie du Run Club Léman 74">
+      <img src="assets/gallery/sortie-03.jpg" alt="Sortie du Run Club Léman 74">
+      <img src="assets/gallery/sortie-04.jpg" alt="Sortie du Run Club Léman 74">
+      <img src="assets/gallery/sortie-05.jpg" alt="Sortie du Run Club Léman 74">
+      <img src="assets/gallery/sortie-06.jpg" alt="Sortie du Run Club Léman 74">
+      <img src="assets/gallery/sortie-07.jpg" alt="Sortie du Run Club Léman 74">
+      <img src="assets/gallery/sortie-08.jpg" alt="Sortie du Run Club Léman 74">
+    </div>
+  </section>
+
   <section class="block tinted">
+    <span class="tag">Solidarité</span>
+    <h2>On a couru pour Fuir pour Elles</h2>
+    <p>Le club s'est mobilisé pour soutenir l'association Fuir pour Elles, le temps d'une sortie solidaire.</p>
+    <div class="photo-grid two">
+      <img src="assets/gallery/fuir-pour-elles-01.jpg" alt="Sortie solidaire pour Fuir pour Elles">
+      <img src="assets/gallery/fuir-pour-elles-02.jpg" alt="Sortie solidaire pour Fuir pour Elles">
+    </div>
+  </section>
+
+    <section class="block tinted">
     <span class="tag">Le comité</span>
     <h2>Le bureau de l'association</h2>
     <table class="bureau">
@@ -57,9 +90,9 @@
         <tr><td>Président</td><td>Mickael Letellier</td></tr>
         <tr><td>Co-Président</td><td>Vincent Candir</td></tr>
         <tr><td>Secrétaire</td><td>Carine Laphin</td></tr>
-        <tr><td>Second Secrétaire</td><td>Océane Dopler</td></tr>
+        <tr><td>Second Secrétaire</td><td>Thomas Gauvin</td></tr>
         <tr><td>Trésorière</td><td>Lucie Le Tellier</td></tr>
-        <tr><td>Co-Trésorier</td><td>Thomas Gauvin</td></tr>
+        <tr><td>Co-Trésorière</td><td>Océane Dopler</td></tr>
       </tbody>
     </table>
   </section>
