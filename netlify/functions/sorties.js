@@ -2,7 +2,13 @@ const { getStore } = require("@netlify/blobs");
 
 exports.handler = async (event) => {
   try {
-    const store = getStore("sorties");
+    // La configuration automatique de Netlify Blobs échoue sur ce site (probablement lié
+    // à sa visibilité "Privée"), donc on fournit explicitement siteID + token.
+    const store = getStore({
+      name: "sorties",
+      siteID: process.env.NETLIFY_SITE_ID || "dcb7e6bd-0199-413a-8e2f-804ff4c051a2",
+      token: process.env.NETLIFY_BLOBS_TOKEN,
+    });
 
     if (event.httpMethod === "GET") {
       const data = (await store.get("liste", { type: "json" })) || [];
