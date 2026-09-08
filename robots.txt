@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://runclubleman74.netlify.app/sitemap.xml

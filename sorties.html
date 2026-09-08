@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="canonical" href="https://runclubleman74.netlify.app/sorties.html">
 <title>Sorties &amp; événements — Run Club Léman 74</title>
 <meta name="description" content="Le programme des sorties running du club, et notre première Backyard, courant 2027.">
 <meta property="og:type" content="website">
@@ -54,8 +55,19 @@
       </div>
     </div>
 
-    <div id="sorties-dynamiques" class="event-list" style="margin-top:20px;"></div>
-    <div id="sorties-vide" class="placeholder-box" style="margin-top:20px;">
+    <div id="calendar-container">
+      <div class="calendar-wrap">
+        <div class="calendar-header">
+          <button type="button" class="cal-nav" id="calPrev" aria-label="Mois précédent">‹</button>
+          <div class="cal-month-label" id="calMonthLabel"></div>
+          <button type="button" class="cal-nav" id="calNext" aria-label="Mois suivant">›</button>
+        </div>
+        <div class="calendar-grid" id="calGrid"></div>
+        <p class="calendar-empty-note">Cliquez sur un jour marqué d'un point pour voir le détail de la sortie.</p>
+      </div>
+      <div id="calDetails" class="event-list" style="margin-top:20px;"></div>
+    </div>
+    <div id="sorties-vide" class="placeholder-box" style="margin-top:20px; display:none;">
       <h3>Aucune sortie régulière programmée pour l'instant</h3>
       <p>Le comité peut en ajouter une avec le formulaire ci-dessous.</p>
     </div>
@@ -133,44 +145,145 @@
 <script>
 (function () {
   var API = '/.netlify/functions/sorties';
-  var list = document.getElementById('sorties-dynamiques');
+  var calendarContainer = document.getElementById('calendar-container');
   var empty = document.getElementById('sorties-vide');
+  var calGrid = document.getElementById('calGrid');
+  var calMonthLabel = document.getElementById('calMonthLabel');
+  var calDetails = document.getElementById('calDetails');
+  var calPrev = document.getElementById('calPrev');
+  var calNext = document.getElementById('calNext');
   var form = document.getElementById('sortieForm');
   var statusEl = document.getElementById('sortieStatus');
 
+  var WEEKDAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+  var itemsByDate = {};
+  var today = new Date();
+  var viewYear = today.getFullYear();
+  var viewMonth = today.getMonth();
+  var selectedDate = null;
+
+  function buildEventCard(s) {
+    var card = document.createElement('div');
+    card.className = 'event-card';
+
+    var dateBadge = document.createElement('div');
+    dateBadge.className = 'event-date';
+    var d = s.jour ? new Date(s.jour + 'T00:00:00') : null;
+    dateBadge.textContent = (d && !isNaN(d)) ? d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }) : '?';
+
+    var body = document.createElement('div');
+    var h3 = document.createElement('h3');
+    h3.textContent = s.type + ' — ' + s.heure + ' à ' + s.lieu;
+    var p = document.createElement('p');
+    var bits = ['Niveau : ' + (s.niveau || 'Tous niveaux')];
+    if (s.organisateur) bits.push('Organisateur : ' + s.organisateur);
+    p.textContent = bits.join(' · ');
+
+    body.appendChild(h3);
+    body.appendChild(p);
+    card.appendChild(dateBadge);
+    card.appendChild(body);
+    return card;
+  }
+
+  function showDetailsFor(dateStr) {
+    selectedDate = dateStr;
+    calDetails.innerHTML = '';
+    var items = itemsByDate[dateStr] || [];
+    items.forEach(function (s) { calDetails.appendChild(buildEventCard(s)); });
+    renderCalendarGrid();
+  }
+
+  function renderCalendarGrid() {
+    calGrid.innerHTML = '';
+    WEEKDAYS.forEach(function (w) {
+      var el = document.createElement('div');
+      el.className = 'cal-weekday';
+      el.textContent = w;
+      calGrid.appendChild(el);
+    });
+
+    var firstDow = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7; // 0=lundi
+    var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+    for (var i = 0; i < firstDow; i++) {
+      var blank = document.createElement('div');
+      blank.className = 'calendar-day empty';
+      calGrid.appendChild(blank);
+    }
+
+    for (var day = 1; day <= daysInMonth; day++) {
+      var mm = String(viewMonth + 1).padStart(2, '0');
+      var dd = String(day).padStart(2, '0');
+      var dateStr = viewYear + '-' + mm + '-' + dd;
+
+      var cell = document.createElement('div');
+      cell.className = 'calendar-day';
+      cell.textContent = String(day);
+
+      var isToday = viewYear === today.getFullYear() && viewMonth === today.getMonth() && day === today.getDate();
+      if (isToday) cell.classList.add('today');
+
+      var hasEvent = !!itemsByDate[dateStr];
+      if (hasEvent) {
+        cell.classList.add('has-event');
+        var dot = document.createElement('span');
+        dot.className = 'cal-dot';
+        cell.appendChild(dot);
+        cell.addEventListener('click', (function (ds) {
+          return function () { showDetailsFor(ds); };
+        })(dateStr));
+      }
+
+      if (dateStr === selectedDate) cell.classList.add('selected');
+
+      calGrid.appendChild(cell);
+    }
+
+    calMonthLabel.textContent = new Date(viewYear, viewMonth, 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+  }
+
+  calPrev.addEventListener('click', function () {
+    viewMonth--;
+    if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+    renderCalendarGrid();
+  });
+  calNext.addEventListener('click', function () {
+    viewMonth++;
+    if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+    renderCalendarGrid();
+  });
+
   function renderSorties(items) {
-    list.innerHTML = '';
     if (!items || items.length === 0) {
+      calendarContainer.style.display = 'none';
       empty.style.display = '';
       return;
     }
+    calendarContainer.style.display = '';
     empty.style.display = 'none';
-    items
-      .slice()
-      .sort(function (a, b) { return (a.jour || '').localeCompare(b.jour || ''); })
-      .forEach(function (s) {
-        var card = document.createElement('div');
-        card.className = 'event-card';
 
-        var dateBadge = document.createElement('div');
-        dateBadge.className = 'event-date';
-        var d = s.jour ? new Date(s.jour + 'T00:00:00') : null;
-        dateBadge.textContent = (d && !isNaN(d)) ? d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' }) : '?';
+    itemsByDate = {};
+    items.forEach(function (s) {
+      if (!s.jour) return;
+      if (!itemsByDate[s.jour]) itemsByDate[s.jour] = [];
+      itemsByDate[s.jour].push(s);
+    });
 
-        var body = document.createElement('div');
-        var h3 = document.createElement('h3');
-        h3.textContent = s.type + ' — ' + s.heure + ' à ' + s.lieu;
-        var p = document.createElement('p');
-        var bits = ['Niveau : ' + (s.niveau || 'Tous niveaux')];
-        if (s.organisateur) bits.push('Organisateur : ' + s.organisateur);
-        p.textContent = bits.join(' · ');
+    // Se place sur le mois de la prochaine sortie à venir (sinon aujourd'hui), et l'affiche.
+    var todayStr = today.toISOString().slice(0, 10);
+    var upcoming = Object.keys(itemsByDate).filter(function (d) { return d >= todayStr; }).sort();
+    var target = upcoming.length ? upcoming[0] : Object.keys(itemsByDate).sort().slice(-1)[0];
+    if (target) {
+      var td = new Date(target + 'T00:00:00');
+      viewYear = td.getFullYear();
+      viewMonth = td.getMonth();
+      selectedDate = target;
+      calDetails.innerHTML = '';
+      itemsByDate[target].forEach(function (s) { calDetails.appendChild(buildEventCard(s)); });
+    }
 
-        body.appendChild(h3);
-        body.appendChild(p);
-        card.appendChild(dateBadge);
-        card.appendChild(body);
-        list.appendChild(card);
-      });
+    renderCalendarGrid();
   }
 
   function loadSorties() {
@@ -179,6 +292,9 @@
       .then(renderSorties)
       .catch(function () { /* la sortie Backyard reste visible même si le chargement échoue */ });
   }
+
+  // Affiche un calendrier du mois en cours dès le chargement, même avant la réponse du serveur.
+  renderCalendarGrid();
 
   if (form) {
     form.addEventListener('submit', function (e) {
