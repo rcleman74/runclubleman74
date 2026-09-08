@@ -1,9 +1,11 @@
 # Configuration de déploiement Netlify — Run Club Léman 74
 # Site 100% statique (HTML/CSS, pas de build), servi tel quel depuis la racine du dépôt.
+# La commande ci-dessous installe juste les dépendances des fonctions (@netlify/blobs)
+# avant le déploiement, sinon Netlify ne les trouve pas au runtime.
 
 [build]
   publish = "."
-  command = ""
+  command = "npm install --prefix netlify/functions"
 
 [[headers]]
   for = "/*"
